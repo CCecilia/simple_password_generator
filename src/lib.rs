@@ -6,7 +6,26 @@ pub struct PasswordGenerator {
     uppercase_char_set: [char; 26],
     number_set: [i32; 9],
     spec_char_set: [char; 11],
-    composition_codes: [char; 4],
+    composition_codes: [CompositionCodes; 4],
+    length: u8,
+}
+
+pub enum CompositionCodes {
+    Lowercase,
+    Uppercase,
+    Number,
+    SpecialCharacter,
+}
+
+impl CompositionCodes {
+    pub fn all_to_array() -> [CompositionCodes; 4] {
+        [
+            CompositionCodes::Lowercase,
+            CompositionCodes::Uppercase,
+            CompositionCodes::Number,
+            CompositionCodes::SpecialCharacter,
+        ]
+    }
 }
 
 impl PasswordGenerator {
@@ -24,22 +43,15 @@ impl PasswordGenerator {
             uppercase_char_set,
             number_set: [0; 9],
             spec_char_set: ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '~'],
-            composition_codes: ['L', 'U', 'N', 'S'],
+            composition_codes: CompositionCodes::all_to_array(),
+            length: 8,
         }
     }
 
-    pub fn get_composition(&self, length: &u8) -> Vec<char> {
-        let mut result: Vec<char> = Vec::new();
-        let mut rng = rand::thread_rng();
+    pub fn length(mut self, length: u8) -> Self {
+        self.length = length;
 
-        for _i in 0..length.clone() - 1 {
-            let rnd_index = rng.gen_range(0..=self.composition_codes.len() - 1);
-            let comp_char = self.composition_codes[rnd_index];
-
-            result.push(comp_char)
-        }
-
-        result
+        self
     }
 
     fn get_random_lowercase_char(&self) -> char {
@@ -70,40 +82,60 @@ impl PasswordGenerator {
         self.spec_char_set[rnd_index]
     }
 
-    pub fn generate(&self, composition: &Vec<char>) -> String {
-        let comp_code = composition;
+    pub fn generate_random_composition(&self) -> Vec<&CompositionCodes> {
+        let mut result: Vec<&CompositionCodes> = Vec::new();
+        let mut rng = rand::thread_rng();
+
+        for _i in 0..self.length - 1 {
+            let rnd_index = rng.gen_range(0..=self.composition_codes.len() - 1);
+            let comp_char = &self.composition_codes[rnd_index];
+
+            result.push(comp_char)
+        }
+
+        result
+    }
+
+    pub fn generate_random_string_from_composition(
+        &self,
+        composition: Vec<&CompositionCodes>,
+    ) -> String {
         let mut password: Vec<char> = Vec::new();
 
-        for code in comp_code {
+        for code in composition {
             match code {
-                'L' => {
+                CompositionCodes::Lowercase => {
                     println!("got lowercase char");
                     let value = self.get_random_lowercase_char();
                     password.push(value);
                 }
-                'U' => {
+                CompositionCodes::Uppercase => {
                     println!("got uppercase char");
                     let value = self.get_random_uppercase_char();
                     password.push(value);
                 }
-                'N' => {
+                CompositionCodes::Number => {
                     println!("got number char");
                     let rand_num = self.get_random_number();
                     let rand_num_u32 = rand_num as u32;
                     let rand_num_char = char::from_u32(rand_num_u32).unwrap();
                     password.push(rand_num_char);
                 }
-                'S' => {
+                CompositionCodes::SpecialCharacter => {
                     println!("got special char");
                     let value = self.get_random_special_character();
                     password.push(value);
-                }
-                _ => {
-                    println!("unknown special char")
                 }
             }
         }
 
         password.into_iter().collect()
+    }
+
+    pub fn generate(&self) -> String {
+        let comp_code = self.generate_random_composition();
+        let password = self.generate_random_string_from_composition(comp_code);
+
+        password
     }
 }

@@ -244,7 +244,7 @@ dependencies = [
 
 [[package]]
 name = "simple_password_generator"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "clap",
  "rand",
