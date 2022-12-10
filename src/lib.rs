@@ -1,5 +1,7 @@
 use rand::Rng;
-use std::{char, u32};
+use std::char;
+
+static DEFAULT_LENGTH: u8 = 8;
 
 pub struct PasswordGenerator {
     lowercase_char_set: [char; 26],
@@ -38,13 +40,14 @@ impl PasswordGenerator {
             let uppered: Vec<char> = lower_char.to_uppercase().collect();
             uppered[0]
         });
+
         PasswordGenerator {
             lowercase_char_set,
             uppercase_char_set,
             number_set: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
             spec_char_set: ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '~'],
             composition_codes: CompositionCodes::all_to_array(),
-            length: 8,
+            length: DEFAULT_LENGTH,
         }
     }
 
@@ -64,7 +67,6 @@ impl PasswordGenerator {
     fn get_random_uppercase_char(&self) -> char {
         let mut rng = rand::thread_rng();
         let rnd_index = rng.gen_range(0..=self.uppercase_char_set.len() - 1);
-        println!("uppercase -- {}", rnd_index);
 
         self.uppercase_char_set[rnd_index]
     }
@@ -72,7 +74,6 @@ impl PasswordGenerator {
     fn get_random_number(&self) -> char {
         let mut rng = rand::thread_rng();
         let rnd_index = rng.gen_range(0..=self.number_set.len() - 1);
-        println!("number -- {}", rnd_index);
 
         self.number_set[rnd_index]
     }
