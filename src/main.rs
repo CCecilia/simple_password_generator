@@ -15,8 +15,7 @@ struct Cli {
 fn main() {
     let cli = Cli::parse();
     let password_length = cli.length;
-    // let pw_generator = PasswordGenerator::new();
     let password = PasswordGenerator::new().length(password_length).generate();
 
-    println!("Password {:?}", password);
+    println!("Password: {}", password);
 }
