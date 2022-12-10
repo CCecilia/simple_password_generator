@@ -1,10 +1,12 @@
 use rand::Rng;
-use std::{char, u32};
+use std::char;
+
+static DEFAULT_LENGTH: u8 = 8;
 
 pub struct PasswordGenerator {
     lowercase_char_set: [char; 26],
     uppercase_char_set: [char; 26],
-    number_set: [i32; 9],
+    number_set: [char; 10],
     spec_char_set: [char; 11],
     composition_codes: [CompositionCodes; 4],
     length: u8,
@@ -38,13 +40,14 @@ impl PasswordGenerator {
             let uppered: Vec<char> = lower_char.to_uppercase().collect();
             uppered[0]
         });
+
         PasswordGenerator {
             lowercase_char_set,
             uppercase_char_set,
-            number_set: [0; 9],
+            number_set: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
             spec_char_set: ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '~'],
             composition_codes: CompositionCodes::all_to_array(),
-            length: 8,
+            length: DEFAULT_LENGTH,
         }
     }
 
@@ -68,7 +71,7 @@ impl PasswordGenerator {
         self.uppercase_char_set[rnd_index]
     }
 
-    fn get_random_number(&self) -> i32 {
+    fn get_random_number(&self) -> char {
         let mut rng = rand::thread_rng();
         let rnd_index = rng.gen_range(0..=self.number_set.len() - 1);
 
@@ -86,7 +89,7 @@ impl PasswordGenerator {
         let mut result: Vec<&CompositionCodes> = Vec::new();
         let mut rng = rand::thread_rng();
 
-        for _i in 0..self.length - 1 {
+        for _i in 0..self.length {
             let rnd_index = rng.gen_range(0..=self.composition_codes.len() - 1);
             let comp_char = &self.composition_codes[rnd_index];
 
@@ -105,24 +108,18 @@ impl PasswordGenerator {
         for code in composition {
             match code {
                 CompositionCodes::Lowercase => {
-                    println!("got lowercase char");
                     let value = self.get_random_lowercase_char();
                     password.push(value);
                 }
                 CompositionCodes::Uppercase => {
-                    println!("got uppercase char");
                     let value = self.get_random_uppercase_char();
                     password.push(value);
                 }
                 CompositionCodes::Number => {
-                    println!("got number char");
-                    let rand_num = self.get_random_number();
-                    let rand_num_u32 = rand_num as u32;
-                    let rand_num_char = char::from_u32(rand_num_u32).unwrap();
-                    password.push(rand_num_char);
+                    let value = self.get_random_number();
+                    password.push(value);
                 }
                 CompositionCodes::SpecialCharacter => {
-                    println!("got special char");
                     let value = self.get_random_special_character();
                     password.push(value);
                 }
@@ -137,5 +134,18 @@ impl PasswordGenerator {
         let password = self.generate_random_string_from_composition(comp_code);
 
         password
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::PasswordGenerator;
+
+    #[test]
+    fn generates_password_to_expected_length() {
+        let expected_length = 16;
+        let result = PasswordGenerator::new().length(expected_length).generate();
+
+        assert_eq!(expected_length as usize, result.chars().count());
     }
 }
