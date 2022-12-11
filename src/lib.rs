@@ -10,6 +10,8 @@ pub struct PasswordGenerator {
     spec_char_set: [char; 11],
     composition_codes: [CompositionCodes; 4],
     length: u8,
+    lowercase_only: bool,
+    uppercase_only: bool,
 }
 
 pub enum CompositionCodes {
@@ -48,11 +50,25 @@ impl PasswordGenerator {
             spec_char_set: ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '~'],
             composition_codes: CompositionCodes::all_to_array(),
             length: DEFAULT_LENGTH,
+            lowercase_only: false,
+            uppercase_only: false,
         }
     }
 
     pub fn length(mut self, length: u8) -> Self {
         self.length = length;
+
+        self
+    }
+
+    pub fn lowercase_only(mut self, lowercase_only: bool) -> Self {
+        self.lowercase_only = lowercase_only;
+
+        self
+    }
+
+    pub fn uppercase_only(mut self, uppercase_only: bool) -> Self {
+        self.uppercase_only = uppercase_only;
 
         self
     }
@@ -88,10 +104,31 @@ impl PasswordGenerator {
     pub fn generate_random_composition(&self) -> Vec<&CompositionCodes> {
         let mut result: Vec<&CompositionCodes> = Vec::new();
         let mut rng = rand::thread_rng();
+        let filtered_comp_codes = self
+            .composition_codes
+            .iter()
+            .filter(|code| match code {
+                CompositionCodes::Lowercase => {
+                    if self.uppercase_only {
+                        false
+                    } else {
+                        true
+                    }
+                }
+                CompositionCodes::Uppercase => {
+                    if self.lowercase_only {
+                        false
+                    } else {
+                        true
+                    }
+                }
+                _ => true,
+            })
+            .collect::<Vec<_>>();
 
         for _i in 0..self.length {
-            let rnd_index = rng.gen_range(0..=self.composition_codes.len() - 1);
-            let comp_char = &self.composition_codes[rnd_index];
+            let rnd_index = rng.gen_range(0..=filtered_comp_codes.len() - 1);
+            let comp_char = filtered_comp_codes[rnd_index];
 
             result.push(comp_char)
         }
@@ -147,5 +184,37 @@ mod tests {
         let result = PasswordGenerator::new().length(expected_length).generate();
 
         assert_eq!(expected_length as usize, result.chars().count());
+    }
+
+    #[test]
+    fn generates_password_with_no_lowercase() {
+        let test_password = PasswordGenerator::new().uppercase_only(true).generate();
+        let mut contains_lowercase = false;
+
+        for c in test_password.chars() {
+            if c.is_alphabetic() {
+                if c.is_lowercase() {
+                    contains_lowercase = true
+                }
+            }
+        }
+
+        assert_eq!(false, contains_lowercase);
+    }
+
+    #[test]
+    fn generates_password_with_no_uppercase() {
+        let test_password = PasswordGenerator::new().lowercase_only(true).generate();
+        let mut contains_uppercase = false;
+
+        for c in test_password.chars() {
+            if c.is_alphabetic() {
+                if c.is_uppercase() {
+                    contains_uppercase = true
+                }
+            }
+        }
+
+        assert_eq!(false, contains_uppercase);
     }
 }
