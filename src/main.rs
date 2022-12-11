@@ -2,7 +2,7 @@ use clap::Parser;
 use simple_password_generator::PasswordGenerator;
 use std::process;
 
-#[derive(Parser, Debug)]
+#[derive(Parser)]
 #[command(name = "Password Generator")]
 #[command(author = "Christian Cecilia <christian.cecilia1@gmail.com")]
 #[command(version = "1.0")]
@@ -18,7 +18,6 @@ struct Cli {
 
 fn main() {
     let cli = Cli::parse();
-    println!("uppercase: {:?}", cli);
     let password_length = cli.length;
     let lowercase_only = cli.lcase_only;
     let uppercase_only = cli.ucase_only;
