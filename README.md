@@ -4,9 +4,27 @@
 
 Running from the binary file
 
-`$ ./simple_password_generator --length 16`
+```bash
+$ ./simple_password_generator --length 16
+```
 
-`$ Password: D2sb9NV7@XjQQ&#`
+```bash
+$ Password: D2sb9NV7@XjQQ&#
+```
+### Available Flags
+
+| Short  | Long         | Description                         | Default |   |   |   |   |   |   |
+|--------|--------------|-------------------------------------|---------|---|---|---|---|---|---|
+|        | --length     | Length of password                  | 8       |   |   |   |   |   |   |
+| -u     | --ucase-only | Only use uppercase aplha characters | false   |   |   |   |   |   |   |
+| -l     | --lcase-only | Only use lowercase aplha characters | false   |   |   |   |   |   |   |
+| -n     | --no-numbers | Don't include any number            | false   |   |   |   |   |   |   |
+| -s     | --no-special | Dont include any special characters | false   |   |   |   |   |   |   |
+| -h     |              | Help                                |         |   |   |   |   |   |   |
+| -v     |              | version                             |         |   |   |   |   |   |   |
+|        |              |                                     |         |   |   |   |   |   |   |
+|        |              |                                     |         |   |   |   |   |   |   |
+
 
 
 ## Lib

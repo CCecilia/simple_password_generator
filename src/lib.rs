@@ -12,6 +12,8 @@ pub struct PasswordGenerator {
     length: u8,
     lowercase_only: bool,
     uppercase_only: bool,
+    exclude_numbers: bool,
+    exclude_special_chars: bool,
 }
 
 pub enum CompositionCodes {
@@ -52,6 +54,8 @@ impl PasswordGenerator {
             length: DEFAULT_LENGTH,
             lowercase_only: false,
             uppercase_only: false,
+            exclude_numbers: false,
+            exclude_special_chars: false,
         }
     }
 
@@ -69,6 +73,18 @@ impl PasswordGenerator {
 
     pub fn uppercase_only(mut self, uppercase_only: bool) -> Self {
         self.uppercase_only = uppercase_only;
+
+        self
+    }
+
+    pub fn exclude_numbers(mut self, exclude_numbers: bool) -> Self {
+        self.exclude_numbers = exclude_numbers;
+
+        self
+    }
+
+    pub fn exclude_special_chars(mut self, exclude_special_chars: bool) -> Self {
+        self.exclude_special_chars = exclude_special_chars;
 
         self
     }
@@ -122,7 +138,20 @@ impl PasswordGenerator {
                         true
                     }
                 }
-                _ => true,
+                CompositionCodes::Number => {
+                    if self.exclude_numbers {
+                        false
+                    } else {
+                        true
+                    }
+                }
+                CompositionCodes::SpecialCharacter => {
+                    if self.exclude_special_chars {
+                        false
+                    } else {
+                        true
+                    }
+                }
             })
             .collect::<Vec<_>>();
 
@@ -203,6 +232,20 @@ mod tests {
     }
 
     #[test]
+    fn generates_password_with_no_numbers() {
+        let test_password = PasswordGenerator::new().exclude_numbers(true).generate();
+        let mut contains_numbers = false;
+
+        for c in test_password.chars() {
+            if c.is_numeric() {
+                contains_numbers = true
+            }
+        }
+
+        assert_eq!(false, contains_numbers);
+    }
+
+    #[test]
     fn generates_password_with_no_uppercase() {
         let test_password = PasswordGenerator::new().lowercase_only(true).generate();
         let mut contains_uppercase = false;
@@ -216,5 +259,22 @@ mod tests {
         }
 
         assert_eq!(false, contains_uppercase);
+    }
+
+    #[test]
+    fn generates_password_with_special_chars() {
+        let test_password = PasswordGenerator::new()
+            .exclude_special_chars(true)
+            .generate();
+        let spec_char_set: Vec<char> = vec!['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '~'];
+        let mut contains_special_chars = false;
+
+        for c in test_password.chars() {
+            if spec_char_set.contains(&c) {
+                contains_special_chars = true;
+            }
+        }
+
+        assert_eq!(false, contains_special_chars);
     }
 }
