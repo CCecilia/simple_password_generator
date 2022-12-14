@@ -1,7 +1,10 @@
 [package]
 name = "simple_password_generator"
+authors = ["christian cecilia"]
 version = "1.0.0"
 edition = "2021"
+license = "MIT"
+description = "Simple CLI password generator. Can also be used as lib in other porjects"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
