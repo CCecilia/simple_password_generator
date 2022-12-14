@@ -5,6 +5,7 @@ version = "1.0.0"
 edition = "2021"
 license = "MIT"
 description = "Simple CLI password generator. Can also be used as lib in other porjects"
+repository = "https://github.com/CCecilia/simple_password_generator"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
