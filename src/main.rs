@@ -57,13 +57,11 @@ fn main() {
     let no_numbers = cli.no_numbers;
     let no_special_chars = cli.no_special;
 
-    if lowercase_only {
-        if uppercase_only {
-            eprintln!(
-                "Lowercase only (-l) and Uppercase only (-u) flags cannot be used simultaneously"
-            );
-            process::exit(1);
-        }
+    if lowercase_only && uppercase_only {
+        eprintln!(
+            "Lowercase only (-l) and Uppercase only (-u) flags cannot be used simultaneously"
+        );
+        process::exit(1);
     }
 
     let password = PasswordGenerator::new()

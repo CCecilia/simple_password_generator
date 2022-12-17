@@ -118,7 +118,7 @@ impl PasswordGenerator {
     /// let test_password = PasswordGenerator::new().lowercase_only(true).generate();
     /// let mut contains_uppercase = false;
     ///
-    /// for c in test_password.chars() {
+    ///	for c in test_password.chars() {
     /// 	if c.is_alphabetic() {
     /// 		if c.is_uppercase() {
     /// 			contains_uppercase = true
@@ -251,34 +251,10 @@ impl PasswordGenerator {
             .composition_codes
             .iter()
             .filter(|code| match code {
-                CompositionCodes::Lowercase => {
-                    if self.uppercase_only {
-                        false
-                    } else {
-                        true
-                    }
-                }
-                CompositionCodes::Uppercase => {
-                    if self.lowercase_only {
-                        false
-                    } else {
-                        true
-                    }
-                }
-                CompositionCodes::Number => {
-                    if self.exclude_numbers {
-                        false
-                    } else {
-                        true
-                    }
-                }
-                CompositionCodes::SpecialCharacter => {
-                    if self.exclude_special_chars {
-                        false
-                    } else {
-                        true
-                    }
-                }
+                CompositionCodes::Lowercase => !self.uppercase_only,
+                CompositionCodes::Uppercase => !self.lowercase_only,
+                CompositionCodes::Number => !self.exclude_numbers,
+                CompositionCodes::SpecialCharacter => !self.exclude_special_chars,
             })
             .collect::<Vec<_>>();
 
@@ -334,8 +310,13 @@ impl PasswordGenerator {
     /// ```
     pub fn generate(&self) -> String {
         let comp_code = self.generate_random_composition();
-        let password = self.generate_random_string_from_composition(comp_code);
 
-        password
+        self.generate_random_string_from_composition(comp_code)
+    }
+}
+
+impl Default for PasswordGenerator {
+    fn default() -> Self {
+        Self::new()
     }
 }

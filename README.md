@@ -1,5 +1,8 @@
 # simple_password_generator
 
+
+[![ci](https://github.com/CCecilia/simple_password_generator/actions/workflows/ci.yml/badge.svg)](https://github.com/CCecilia/simple_password_generator/actions/workflows/ci.yml)
+
 ## CLI
 
 Running from the binary file
