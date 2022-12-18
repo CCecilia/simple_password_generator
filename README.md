@@ -8,7 +8,7 @@
 Running from the binary file
 
 ```bash
-$ ./simple_password_generator --length 16
+$ ./spg --length 16
 ```
 
 ```bash
