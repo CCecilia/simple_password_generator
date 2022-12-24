@@ -28,7 +28,7 @@ $ Password: D2sb9NV7@XjQQ&#
 */
 use clap::Parser;
 
-use simple_password_generator::PasswordGenerator;
+use simple_password_generator::generator::PasswordGenerator;
 use std::process;
 
 #[derive(Parser)]
