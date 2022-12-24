@@ -1,7 +1,6 @@
 //! # Simple Password Generator
 //!
 //! A library for generating passwords
-
 use rand::Rng;
 use std::char;
 
@@ -16,35 +15,35 @@ static SPECIAL_CHARS: [char; 11] = ['!', '@', '#', '$', '%', '^', '&', '*', '(',
 /// PasswordGenerator struct for generatoring passwords
 pub struct PasswordGenerator {
     /// Array of lowercase chars used when generating a password.
-    lowercase_char_set: [char; 26],
+    pub lowercase_char_set: [char; 26],
     /// Array of uppercase chars used when generating a password.
-    uppercase_char_set: [char; 26],
+    pub uppercase_char_set: [char; 26],
     /// Array of number chars used when generating a password.
-    number_set: [char; 10],
+    pub number_set: [char; 10],
     /// Array of special chars used when generating a password.
-    spec_char_set: [char; 11],
+    pub spec_char_set: [char; 11],
     /// Array of composition codes used when generating a password.
-    composition_codes: [CompositionCodes; 4],
+    pub composition_codes: [CompositionCodes; 4],
     /// Length of password to be generated.
     ///
     /// Default `8`
-    length: u8,
+    pub length: u8,
     /// Bool used to exclude uppercase composition code when generating a password.
     ///
     /// Default `false`
-    lowercase_only: bool,
+    pub lowercase_only: bool,
     /// Bool used to exclude lowercase composition code when generating a password.
     ///
     /// Default `false`
-    uppercase_only: bool,
+    pub uppercase_only: bool,
     /// Bool used to exclude number composition code when generating a password.
     ///
     /// Default `false`
-    exclude_numbers: bool,
+    pub exclude_numbers: bool,
     /// Bool used to special character composition code when generating a password.
     ///
     /// Default `false`
-    exclude_special_chars: bool,
+    pub exclude_special_chars: bool,
 }
 
 /// The primary character types used when generating the composition of the password

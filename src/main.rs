@@ -6,7 +6,7 @@
 Running from the binary file
 
 ```bash
-$ ./simple_password_generator --length 16
+$ ./spg --length 16
 ```
 
 ```bash
@@ -26,8 +26,8 @@ $ Password: D2sb9NV7@XjQQ&#
 |        |              |                                     |         |   |   |   |   |   |   |
 |        |              |                                     |         |   |   |   |   |   |   |
 */
-
 use clap::Parser;
+
 use simple_password_generator::PasswordGenerator;
 use std::process;
 
@@ -47,6 +47,8 @@ struct Cli {
     no_numbers: bool,
     #[arg(short = 's', long, help = "Dont include any special characters")]
     no_special: bool,
+    #[arg(short = 'c', long, help = "Copy password to clipboard")]
+    copy_to_clipboard: bool,
 }
 
 fn main() {
@@ -56,6 +58,7 @@ fn main() {
     let uppercase_only = cli.ucase_only;
     let no_numbers = cli.no_numbers;
     let no_special_chars = cli.no_special;
+    let copy_to_clipboard_flag = cli.copy_to_clipboard;
 
     if lowercase_only && uppercase_only {
         eprintln!(
@@ -71,6 +74,8 @@ fn main() {
         .exclude_numbers(no_numbers)
         .exclude_special_chars(no_special_chars)
         .generate();
+
+    if copy_to_clipboard_flag {}
 
     println!("Password: {}", password);
 }
