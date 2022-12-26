@@ -94,7 +94,7 @@ impl PasswordGenerator {
     /// # Examples
     ///
     /// ```
-    /// use simple_password_generator::PasswordGenerator;
+    /// use simple_password_generator::generator::PasswordGenerator;
     ///
     /// let expected_length = 16;
     /// let result = PasswordGenerator::new().length(expected_length).generate();
@@ -112,7 +112,7 @@ impl PasswordGenerator {
     /// # Examples
     ///
     /// ```
-    /// use simple_password_generator::PasswordGenerator;
+    /// use simple_password_generator::generator::PasswordGenerator;
     ///
     /// let test_password = PasswordGenerator::new().lowercase_only(true).generate();
     /// let mut contains_uppercase = false;
@@ -138,7 +138,7 @@ impl PasswordGenerator {
     /// # Examples
     ///
     /// ```
-    /// use simple_password_generator::PasswordGenerator;
+    /// use simple_password_generator::generator::PasswordGenerator;
     ///
     /// let test_password = PasswordGenerator::new().uppercase_only(true).generate();
     /// let mut contains_lowercase = false;
@@ -164,7 +164,7 @@ impl PasswordGenerator {
     /// # Examples
     ///
     /// ```
-    /// use simple_password_generator::PasswordGenerator;
+    /// use simple_password_generator::generator::PasswordGenerator;
     ///
     /// let test_password = PasswordGenerator::new().exclude_numbers(true).generate();
     /// let mut contains_numbers = false;
@@ -188,7 +188,7 @@ impl PasswordGenerator {
     /// # Examples
     ///
     /// ```
-    /// use simple_password_generator::PasswordGenerator;
+    /// use simple_password_generator::generator::PasswordGenerator;
     ///
     /// let test_password = PasswordGenerator::new()
     /// 	.exclude_special_chars(true)
@@ -303,7 +303,7 @@ impl PasswordGenerator {
     /// # Examples
     ///
     /// ```
-    /// use simple_password_generator::PasswordGenerator;
+    /// use simple_password_generator::generator::PasswordGenerator;
     ///
     /// let password = PasswordGenerator::new().generate();
     /// ```
