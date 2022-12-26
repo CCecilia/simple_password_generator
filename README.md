@@ -16,18 +16,22 @@ $ Password: D2sb9NV7@XjQQ&#
 ```
 ### Available Flags
 
-| Short  | Long         | Description                         | Default |   |   |   |   |   |   |
-|--------|--------------|-------------------------------------|---------|---|---|---|---|---|---|
-|        | --length     | Length of password                  | 8       |   |   |   |   |   |   |
-| -u     | --ucase-only | Only use uppercase aplha characters | false   |   |   |   |   |   |   |
-| -l     | --lcase-only | Only use lowercase aplha characters | false   |   |   |   |   |   |   |
-| -n     | --no-numbers | Don't include any number            | false   |   |   |   |   |   |   |
-| -s     | --no-special | Dont include any special characters | false   |   |   |   |   |   |   |
-| -h     |              | Help                                |         |   |   |   |   |   |   |
-| -v     |              | version                             |         |   |   |   |   |   |   |
-|        |              |                                     |         |   |   |   |   |   |   |
-|        |              |                                     |         |   |   |   |   |   |   |
+| short  | long                | description                         | default |   |   |   |   |   |   |
+|--------|---------------------|-------------------------------------|---------|---|---|---|---|---|---|
+|        | --length            | Length of password                  | 8       |   |   |   |   |   |   |
+| -u     | --ucase-only        | Only use uppercase aplha characters | false   |   |   |   |   |   |   |
+| -l     | --lcase-only        | Only use lowercase aplha characters | false   |   |   |   |   |   |   |
+| -n     | --no-numbers        | Don't include any number            | false   |   |   |   |   |   |   |
+| -s     | --no-special        | Dont include any special characters | false   |   |   |   |   |   |   |
+| -c     | --copy-to-clipboard | Copies password to system clipboard | false   |   |   |   |   |   |   |
+| -h     |                     | Help                                |         |   |   |   |   |   |   |
+| -v     |                     | version                             |         |   |   |   |   |   |   |
+|        |                     |                                     |         |   |   |   |   |   |   |
+|        |                     |                                     |         |   |   |   |   |   |   |
 
+
+**Note**
+The `--copy-to-clipboard` use on linux systems requires that [xclip](https://github.com/astrand/xclip) be installed.
 
 
 ## Lib
