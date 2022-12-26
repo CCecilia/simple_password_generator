@@ -28,7 +28,7 @@ $ Password: D2sb9NV7@XjQQ&#
 */
 use clap::Parser;
 
-use simple_password_generator::generator::PasswordGenerator;
+use simple_password_generator::{clipboard, generator::PasswordGenerator};
 use std::process;
 
 #[derive(Parser)]
@@ -75,7 +75,18 @@ fn main() {
         .exclude_special_chars(no_special_chars)
         .generate();
 
-    if copy_to_clipboard_flag {}
+    if copy_to_clipboard_flag {
+        let copy = clipboard::copy_to_clipboard(&password);
+
+        match copy {
+            Ok(()) => {
+                println!("got ok from copy")
+            }
+            Err(_clipboard_error) => {
+                eprintln!("Failed to copy to clip board")
+            }
+        }
+    }
 
     println!("Password: {}", password);
 }
