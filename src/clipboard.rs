@@ -1,9 +1,9 @@
-use std::io::Write;
-use std::{
-    error::Error,
-    fmt,
-    process::{Command, Stdio},
-};
+use scopeguard::defer;
+use std::ptr;
+use std::{error::Error, fmt};
+use winapi::shared::minwindef::FALSE;
+use winapi::um::winbase::{GlobalAlloc, GlobalFree, GlobalLock, GlobalUnlock, GMEM_MOVEABLE};
+use winapi::um::winuser::{CloseClipboard, OpenClipboard, SetClipboardData, CF_UNICODETEXT};
 
 #[derive(Debug)]
 pub enum ClipboardError {
@@ -22,6 +22,7 @@ impl fmt::Display for ClipboardError {
     }
 }
 
+#[cfg(target_os = "linux")]
 fn check_for_xclip() -> Result<(), ClipboardError> {
     let cmd = Command::new("which").arg("xclip").output();
 
@@ -33,16 +34,6 @@ fn check_for_xclip() -> Result<(), ClipboardError> {
     };
 
     Ok(())
-}
-
-#[cfg(target_os = "windows")]
-fn copy_to_clipboard(s: &str) {
-    // Windows-specific clipboard code goes here
-}
-
-#[cfg(target_os = "macos")]
-fn copy_to_clipboard(s: &str) {
-    // macOS-specific clipboard code goes here
 }
 
 #[cfg(target_os = "linux")]
@@ -76,4 +67,54 @@ pub fn copy_to_clipboard(password: &str) -> Result<(), ClipboardError> {
     }
 
     Ok(())
+}
+
+#[cfg(target_os = "windows")]
+pub fn copy_to_clipboard(password: &str) -> Result<(), ClipboardError> {
+    // Needs to be UTF-16 encoded
+    let mut password_utf16: Vec<u16> = password.encode_utf16().collect();
+    // And zero-terminated before passing it into `SetClipboardData`
+    password_utf16.push(0);
+    // Allocate memory
+    let hglob = unsafe {
+        GlobalAlloc(
+            GMEM_MOVEABLE,
+            password_utf16.len() * std::mem::size_of::<u16>(),
+        )
+    };
+    if hglob == ptr::null_mut() {
+        return Err(ClipboardError::FailedToCopy);
+    }
+    // Ensure cleanup on scope exit
+    defer!(unsafe { GlobalFree(hglob) };);
+
+    // Retrieve writeable pointer to memory
+    let dst = unsafe { GlobalLock(hglob) };
+    if dst == ptr::null_mut() {
+        return Err(ClipboardError::FailedToCopy);
+    }
+    // Copy data
+    unsafe { ptr::copy_nonoverlapping(password_utf16.as_ptr(), dst as _, password_utf16.len()) };
+    // Release writeable pointer
+    unsafe { GlobalUnlock(hglob) };
+
+    // Everything is set up now, let's open the clipboard
+    let success = unsafe { OpenClipboard(ptr::null_mut()) } != FALSE;
+    if !success {
+        return Err(ClipboardError::FailedToCopy);
+    }
+    // Ensure cleanup on scope exit
+    defer!(unsafe { CloseClipboard() };);
+    // And apply data
+    let success = unsafe { SetClipboardData(CF_UNICODETEXT, hglob) } != ptr::null_mut();
+    if !success {
+        return Err(ClipboardError::FailedToCopy);
+    }
+
+    Ok(())
+}
+
+#[cfg(target_os = "macos")]
+pub fn copy_to_clipboard(s: &str) {
+    // macOS-specific clipboard code goes here
 }

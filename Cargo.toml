@@ -19,4 +19,5 @@ rand = "0.8.5"
 clap = { version = "4.0.29", features = ["derive"] }
 
 [target.'cfg(windows)'.dependencies]
-winapi = { version = "0.3", features = ["winuser"] }
+winapi = { version = "0.3", features = ["winuser", "winbase"] }
+scopeguard = "1.1.0"
