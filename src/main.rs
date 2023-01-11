@@ -76,7 +76,7 @@ fn main() {
         .generate();
 
     if copy_to_clipboard_flag {
-        let copy = clipboard::copy_to_clipboard(&password);
+        let copy = clipboard::shared::copy_password_to_clipboard(&password);
 
         match copy {
             Ok(()) => {
